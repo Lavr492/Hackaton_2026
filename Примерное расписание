@@ -1,0 +1,45 @@
+6 марта 18:00–22:00 — Старт: репозиторий, доступы, быстрый EDA
+Цель — получить рабочую структуру и понять качество данных.
+Задачи
+Создать репозиторий, добавить README.md и шаблон metadata.csv (поля: id, mouse_id, region, group, file_name, acquisition_date, instrument_settings).
+Принять инвайты и проверить доступы к данным.
+Загрузить 5–10 спектров в Colab и сделать быстрый EDA: длина спектров, вид артефактов, базовая визуализация.
+Deliverable — notebooks/00_data_load_and_eda.ipynb, пример metadata.csv, коммит draft-eda.
+Контроль — в 22:00 ноутбук запускается с нуля и показывает 5 графиков.
+
+7 марта 09:00–13:00 — Предобработка и сбор матриц
+Цель — получить воспроизводимую матрицу признаков и меток.
+Задачи
+Реализовать и зафиксировать pipeline: truncate → remove_cosmic → baseline_correction (arPLS/BubbleFill) → savgol_filter → normalize (vector norm или SNV).
+Прогнать pipeline на всех спектрах, сохранить data/X.npy, data/y.npy, data/groups.npy (mouse_id).
+Зафиксировать seed и requirements.txt.
+Deliverable — notebooks/01_preprocessing.ipynb, data/*.npy, коммит preprocessing-done.
+Контроль — предобработка запускается за приемлемое время (пара минут на спектр) и нет критичных ошибок.
+
+7 марта 13:30–17:30 — Модели и честная валидация
+Цель — получить baseline‑результаты и понять сигнал.
+Задачи
+Разбивка: GroupKFold по mouse_id (n_splits=5).
+Обучить и сравнить: LogisticRegression (L2), RandomForest (n_estimators=100, n_jobs=-1), SVM (RBF, по необходимости на подвыборке).
+Метрики: Accuracy, Macro F1, Confusion matrix, ROC‑AUC (one‑vs‑rest); для каждой метрики — mean ± std по фолдам.
+Быстрый RandomizedSearch для 1–2 ключевых гиперпараметров (ограничить итерации).
+Deliverable — notebooks/02_modeling_baseline.ipynb, models_results.csv, коммит baseline-models.
+Контроль — результаты и std метрик сохранены; лучший baseline выбран.
+
+7 марта 17:45–20:30 — Интерпретация признаков и финальный прогон
+Цель — понять, какие wavenumbers важны, и получить финальные метрики.
+Задачи
+Для линейной модели вывести коэффициенты; для RF — permutation importance; при возможности — SHAP для одного примера.
+Построить график: wavenumber vs importance; сгруппировать соседние пики в диапазоны.
+Финальный прогон на отложенном тесте (по мышам, которых не было в train) и сохранение final_metrics.csv.
+Deliverable — notebooks/03_feature_importance.ipynb, figs/importance.png, final_metrics.csv, коммит feature-importance и final-run.
+Контроль — график важности сохранён, финальные метрики зафиксированы.
+
+7 марта 20:30–22:00 — Короткая демонстрация и упаковка результатов
+Цель — подготовить минимальную демонстрацию для защиты/проверки (не полная презентация).
+Задачи
+Собрать 4 слайда (PDF): цель и данные; предобработка; ключевые метрики; график важности + вывод.
+Проверить, что все ноутбуки запускаются с нуля и requirements.txt актуален.
+Сделать финальный коммит и тег release.
+Deliverable — slides/demo_minimal.pdf, все ноутбуки и артефакты в репозитории, коммит release.
+Контроль — демонстрация запускается локально/в Colab и занимает ≤5 минут.

@@ -1,0 +1,20 @@
+data:
+  path: data/train.csv
+  target: label
+split:
+  test_size: 0.15
+  val_size: 0.15
+features:
+  windows:
+    - [450, 500]
+    - [315, 330]
+catboost:
+  iterations: 400
+  learning_rate: 0.03
+  depth: 6
+  l2_leaf_reg: 7
+  subsample: 0.8
+  colsample_bylevel: 0.8
+  early_stopping_rounds: 50
+output:
+  model_path: models/catboost_quick.cbm

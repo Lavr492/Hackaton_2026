@@ -1,0 +1,13 @@
+import numpy as np
+from sklearn.metrics import f1_score, classification_report
+
+probs = model.predict_proba(X_val)        # shape (n_samples, n_classes)
+# пример порогов
+thresh = np.array([0.5, 0.5, 0.5])
+preds_idx = np.argmax(probs / thresh, axis=1)   # индексы 0..C-1
+
+# map indices -> оригинальные метки (model.classes_ обычно numpy array)
+preds_labels = model.classes_[preds_idx]
+
+print(classification_report(y_val, preds_labels))
+print("Macro F1:", f1_score(y_val, preds_labels, average='macro'))
